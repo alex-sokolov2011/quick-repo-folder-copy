@@ -15,7 +15,7 @@ Quick Repo Folder Copy is a one-day project that allows you to quickly copy spec
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/yourusername/quick-repo-folder-copy.git
+    git clone git clone https://github.com/alex-sokolov2011/quick-repo-folder-copy.git
     cd quick-repo-folder-copy
     ```
 
@@ -50,3 +50,10 @@ copy_folder_gitrepo -help
 
 This project was inspired by my participation in the MLOps Zoomcamp, where participants needed to copy nested folders from homework repositories into their own repositories. Many participants faced issues due to insufficient experience with Git. This tool simplifies that process, allowing users to copy specific folders from GitHub repositories without dealing with nested subfolders or `.gitmodules`.
 
+## Feedback and Support
+
+If you have any questions or suggestions, feel free to open an issue on the [GitHub repository](https://github.com/alex-sokolov2011/quick-repo-folder-copy).
+
+## License
+
+This project is licensed under the MIT License.
