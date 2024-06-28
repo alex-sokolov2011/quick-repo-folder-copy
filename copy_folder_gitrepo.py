@@ -17,11 +17,16 @@ def parse_github_url(url):
     Returns:
     tuple: A tuple containing the repository owner, repository name, branch name, and path within the repository.
     """
-    parts = url.split('/')
-    repo_owner = parts[3]
-    repo_name = parts[4]
-    branch = parts[6]
-    path_in_repo = '/'.join(parts[7:])
+    try:
+        parts = url.split('/')
+        repo_owner = parts[3]
+        repo_name = parts[4]
+        branch = parts[6]
+        path_in_repo = '/'.join(parts[7:])
+    except IndexError:
+        print("Error: Invalid GitHub URL format. Please ensure the URL is correct.")
+        sys.exit(1)
+
     return repo_owner, repo_name, branch, path_in_repo
 
 def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path):

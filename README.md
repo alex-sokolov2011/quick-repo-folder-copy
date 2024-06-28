@@ -26,7 +26,7 @@ Quick Repo Folder Copy is a one-day project that allows you to quickly copy spec
     ./install.sh
     ```
 
-    The script will check for Python3, create a virtual environment, install dependencies, and create a symlink for global access to the script.
+    The script will make the Python script executable and create a symlink for global access to the script. Ensure you have the required libraries installed by running:
 
 ## Usage
 
@@ -46,5 +46,7 @@ or
 copy_folder_gitrepo -help
 ```
 
+## Motivation
 
+This project was inspired by my participation in the MLOps Zoomcamp, where participants needed to copy nested folders from homework repositories into their own repositories. Many participants faced issues due to insufficient experience with Git. This tool simplifies that process, allowing users to copy specific folders from GitHub repositories without dealing with nested subfolders or `.gitmodules`.
 
