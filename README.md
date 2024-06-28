@@ -26,7 +26,7 @@ Quick Repo Folder Copy is a one-day project that allows you to quickly copy spec
     ./install.sh
     ```
 
-    The script will make the Python script executable and create a symlink for global access to the script. Ensure you have the required libraries installed by running:
+    The script will make the Python script executable and create a symlink for global access to the script. Ensure you have the required libraries in requirements.txt installed (e.g., using pip install -r requirements.txt, conda conda install --file requirements.txt, or pipenv install -r requirements.txt).
 
 ## Usage
 
