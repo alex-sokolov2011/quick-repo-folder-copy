@@ -36,6 +36,15 @@ After installation, you can use the `copy_folder_gitrepo` command from any direc
 copy_folder_gitrepo https://github.com/DataTalksClub/mlops-zoomcamp/tree/main/cohorts/2024/06-best-practices
 ```
 
+The script uses archiving to reduce download time and save space, extracting only the necessary folders.
+
+### Advantages
+
+- **Time-saving**: Downloads only the required folders from the archive, instead of cloning the entire repository.
+- **Space-saving**: No need to store the whole repository, beneficial for large projects.
+- **Ease of use**: No access permissions or tokens required, easy to install and use.
+
+
 ## Help
 To display the help message, use:
 ```sh
