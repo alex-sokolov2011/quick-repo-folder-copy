@@ -24,8 +24,12 @@ def parse_github_url(url):
         parts = url.split("/")
         repo_owner = parts[3]
         repo_name = parts[4]
-        branch = parts[6] if "tree" in parts else "main"
-        path_in_repo = "/".join(parts[7:]) if "tree" in parts else ""
+        if "tree" in parts:
+            branch = parts[6]
+            path_in_repo = "/".join(parts[7:])
+        else:
+            branch = "main"
+            path_in_repo = ""
     except IndexError:
         print("Error: Invalid GitHub URL format. Please ensure the URL is correct.")
         sys.exit(1)
@@ -91,7 +95,7 @@ def main():
 
     github_url = sys.argv[1]
     repo_owner, repo_name, branch, path_in_repo = parse_github_url(github_url)
-    dest_path = os.path.basename(path_in_repo) if path_in_repo else f"{repo_name}-{branch}"
+    dest_path = os.path.basename(path_in_repo) if path_in_repo else "."
     download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
     print(f"Copied {path_in_repo or 'entire repository'} from {repo_owner}/{repo_name} to {dest_path}")
 
