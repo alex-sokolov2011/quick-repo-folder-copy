@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 
+"""Script for copying a folder from a GitHub repository to the current directory"""
+
 import os
-import shutil
 import sys
-import requests
+
 import zipfile
 from io import BytesIO
+import requests
 
 def parse_github_url(url):
     """
-    Parse the GitHub URL to extract repository owner, repository name, branch, and path within the repository.
+    Parse the GitHub URL to extract repository owner, name repo, branch, and path within the repo.
 
     Parameters:
     url (str): The GitHub URL of the folder.
 
     Returns:
-    tuple: A tuple containing the repository owner, repository name, branch name, and path within the repository.
+    tuple: A tuple containing the repository owner, name repo, branch, and path within the repo.
     """
     try:
         parts = url.split('/')
@@ -41,7 +43,7 @@ def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
     dest_path (str): The destination path to extract the folder to.
     """
     url = f'https://github.com/{repo_owner}/{repo_name}/archive/refs/heads/{branch}.zip'
-    response = requests.get(url)
+    response = requests.get(url, timeout=2)
     if response.status_code == 200:
         with zipfile.ZipFile(BytesIO(response.content)) as z:
             for file_info in z.infolist():
@@ -72,6 +74,9 @@ def print_help():
     print(help_message)
 
 def main():
+    """
+    The main function of script. Copies specified folder from GitHub repo to the current directory.
+    """
     if len(sys.argv) != 2 or sys.argv[1] in ('-h', '--help'):
         print_help()
         return
