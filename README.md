@@ -34,15 +34,17 @@ After installation, you can use the `copy_folder_gitrepo` command from any direc
 
 ```sh
 copy_folder_gitrepo https://github.com/DataTalksClub/mlops-zoomcamp/tree/main/cohorts/2024/06-best-practices
+copy_folder_gitrepo https://github.com/DataTalksClub/mlops-zoomcamp
 ```
 
-The script uses archiving to reduce download time and save space, extracting only the necessary folders.
+The script uses archiving to reduce download time and save space, extracting only the necessary folders or the entire repository.
 
 ### Advantages
 
 - **Time-saving**: Downloads only the required folders from the archive, instead of cloning the entire repository.
 - **Space-saving**: No need to store the whole repository, beneficial for large projects.
 - **Ease of use**: No access permissions or tokens required, easy to install and use.
+- **Privacy:** No third-party extensions or applications will monitor the state of your GitHub and local folders.
 
 
 ## Help
@@ -61,7 +63,7 @@ This project was inspired by my participation in the MLOps Zoomcamp, where parti
 
 ## Feedback and Support
 
-If you have any questions or suggestions, feel free to open an issue on the [GitHub repository](https://github.com/alex-sokolov2011/quick-repo-folder-copy).
+If you have any questions or suggestions, feel free to open an issue on this repository.
 
 ## License
 
