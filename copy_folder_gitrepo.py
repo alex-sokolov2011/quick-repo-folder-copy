@@ -1,14 +1,36 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Script for copying a folder from a GitHub repository to the current directory"""
 
 import os
 import sys
+import json
+import shutil
 import zipfile
 from io import BytesIO
 
 import requests
 
+
+def get_default_branch(repo_owner, repo_name):
+    """
+    Fetch the default branch name from the GitHub API.
+
+    Parameters:
+    repo_owner (str): The owner of the repository.
+    repo_name (str): The name of the repository.
+
+    Returns:
+    str: The default branch name (e.g., 'main' or 'master').
+    """
+    api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}"
+    response = requests.get(api_url, timeout=5)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("default_branch", "main")
+    else:
+        print(f"Error: Unable to fetch repo metadata. Status code: {response.status_code}")
+        sys.exit(1)
 
 def parse_github_url(url):
     """
@@ -28,7 +50,7 @@ def parse_github_url(url):
             branch = parts[6]
             path_in_repo = "/".join(parts[7:])
         else:
-            branch = "main"
+            branch = get_default_branch(repo_owner, repo_name)
             path_in_repo = ""
     except IndexError:
         print("Error: Invalid GitHub URL format. Please ensure the URL is correct.")
@@ -49,7 +71,7 @@ def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
     dest_path (str): The destination path to extract the folder to.
     """
     url = f"https://github.com/{repo_owner}/{repo_name}/archive/refs/heads/{branch}.zip"
-    response = requests.get(url, timeout=2)
+    response = requests.get(url, timeout=5)
     if response.status_code == 200:
         with zipfile.ZipFile(BytesIO(response.content)) as z:
             if path_in_repo:
@@ -84,6 +106,21 @@ def print_help():
     """
     print(help_message)
 
+def rename_extracted_root(repo_name, branch, target_name):
+    """
+    Rename the extracted root folder (e.g., repo-main) to a desired name.
+
+    Parameters:
+    repo_name (str): The name of the repository.
+    branch (str): The branch that was downloaded.
+    target_name (str): The desired name of the resulting folder.
+    """
+    extracted_name = f"{repo_name}-{branch}"
+    if os.path.exists(target_name):
+        print(f"Error: Destination path '{target_name}' already exists.")
+        sys.exit(1)
+    shutil.move(extracted_name, target_name)
+
 
 def main():
     """
@@ -97,6 +134,11 @@ def main():
     repo_owner, repo_name, branch, path_in_repo = parse_github_url(github_url)
     dest_path = os.path.basename(path_in_repo) if path_in_repo else "."
     download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
+    
+    # Optional rename if full repo was downloaded with branch name
+    if dest_path == "." :
+        rename_extracted_root(repo_name, branch, repo_name)
+
     print(f"Copied {path_in_repo or 'entire repository'} from {repo_owner}/{repo_name} to {dest_path}")
 
 
