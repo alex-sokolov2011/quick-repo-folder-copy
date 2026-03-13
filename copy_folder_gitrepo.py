@@ -77,7 +77,7 @@ def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
             if path_in_repo:
                 for file_info in z.infolist():
                     if file_info.filename.startswith(f"{repo_name}-{branch}/{path_in_repo}"):
-                        file_info.filename = file_info.filename[len(f"{repo_name}-{branch}/{path_in_repo}") :]
+                        file_info.filename = file_info.filename[len(f"{repo_name}-{branch}/{path_in_repo}"):].lstrip("/")
                         if file_info.filename:
                             z.extract(file_info, dest_path)
             else:
