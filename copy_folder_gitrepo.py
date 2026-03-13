@@ -59,6 +59,29 @@ def parse_github_url(url):
     return repo_owner, repo_name, branch, path_in_repo
 
 
+def download_folder_via_api(repo_owner, repo_name, branch, api_path, local_path):
+    """Recursively download a folder using GitHub Contents API."""
+    api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{api_path}?ref={branch}"
+    response = requests.get(api_url, timeout=15)
+    if response.status_code != 200:
+        print(f"Error: GitHub API returned {response.status_code} for {api_path}")
+        sys.exit(1)
+
+    os.makedirs(local_path, exist_ok=True)
+    for item in response.json():
+        item_local = os.path.join(local_path, item["name"])
+        if item["type"] == "dir":
+            download_folder_via_api(repo_owner, repo_name, branch, item["path"], item_local)
+        elif item["type"] == "file":
+            print(f"Downloading {item['path']} ...")
+            r = requests.get(item["download_url"], timeout=30)
+            if r.status_code != 200:
+                print(f"Error: Failed to download {item['path']}")
+                sys.exit(1)
+            with open(item_local, "wb") as f:
+                f.write(r.content)
+
+
 def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path):
     """
     Download and extract the specified folder from the GitHub repository.
@@ -70,18 +93,16 @@ def download_and_extract(repo_owner, repo_name, branch, path_in_repo, dest_path)
     path_in_repo (str): The path of the folder within the repository to download.
     dest_path (str): The destination path to extract the folder to.
     """
+    if path_in_repo:
+        download_folder_via_api(repo_owner, repo_name, branch, path_in_repo, dest_path)
+        return
+
+    print("Downloading full repository archive...")
     url = f"https://github.com/{repo_owner}/{repo_name}/archive/refs/heads/{branch}.zip"
-    response = requests.get(url, timeout=5)
+    response = requests.get(url, timeout=60)
     if response.status_code == 200:
         with zipfile.ZipFile(BytesIO(response.content)) as z:
-            if path_in_repo:
-                for file_info in z.infolist():
-                    if file_info.filename.startswith(f"{repo_name}-{branch}/{path_in_repo}"):
-                        file_info.filename = file_info.filename[len(f"{repo_name}-{branch}/{path_in_repo}"):].lstrip("/")
-                        if file_info.filename:
-                            z.extract(file_info, dest_path)
-            else:
-                z.extractall(dest_path)
+            z.extractall(dest_path)
     else:
         print(f"Error: Unable to download repository archive. Status code: {response.status_code}")
         sys.exit(1)
