@@ -52,9 +52,15 @@ Quick Repo Folder Copy lets you quickly copy specific folders from GitHub reposi
     bash install.sh
     ```
 
-    The script creates a wrapper at `/usr/local/bin/copy_folder_gitrepo` that calls Python with the script path. If Git is installed in `Program Files`, run Git Bash as administrator.
+    The script creates `~/bin/copy_folder_gitrepo` and adds `~/bin` to PATH in `~/.bashrc`.
 
-3. Install dependencies:
+3. Reload the shell config:
+
+    ```sh
+    source ~/.bashrc
+    ```
+
+4. Install dependencies:
 
     ```sh
     pip install -r requirements.txt
